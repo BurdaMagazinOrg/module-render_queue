@@ -37,7 +37,7 @@ class RenderWorker extends QueueWorkerBase {
     foreach ($enabled_view_modes as $view_mode => $label) {
       foreach ($langcodes as $langcode) {
         $view = $view_builder->view($entity, $view_mode, $langcode);
-        $renderer->render($view);
+        $renderer->renderRoot($view);
       }
     }
   }
