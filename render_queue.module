@@ -4,3 +4,32 @@
  * @file
  * Render Queue module file.
  */
+
+use \Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function render_queue_entity_insert(EntityInterface $entity) {
+  render_queue_add($entity);
+}
+
+/**
+ * Implements hook_entity_update(). 
+ */
+function render_queue_entity_update(EntityInterface $entity) {
+  render_queue_add($entity);
+}
+
+/**
+ * Adds the entity to the render queue.
+ */
+function render_queue_add(EntityInterface $entity) {
+  $queue = \Drupal::queue('render_queue');
+  $item = [
+    'id' => $entity->id(),
+    'type' => $entity->getEntityTypeId(),
+    'bundle' => $entity->bundle(),
+  ];
+  $queue->createItem($item);
+}
