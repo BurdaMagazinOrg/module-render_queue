@@ -4,6 +4,7 @@ namespace Drupal\render_queue\Plugin\QueueWorker;
 
 use \Drupal\Core\Queue\QueueWorkerBase;
 use \Drupal\Core\Language\LanguageInterface;
+use \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 
 /**
  * @QueueWorker(
@@ -17,8 +18,10 @@ class RenderWorker extends QueueWorkerBase {
    * {@inheritdoc}
    */
   public function processItem($data) {
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder($data['type']);
-    if (!$view_builder) {
+    try {
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder($data['type']);
+    }
+    catch (InvalidPluginDefinitionException $e) {
       return;
     }
     $enabled_view_modes = \Drupal::service('entity_display.repository')
