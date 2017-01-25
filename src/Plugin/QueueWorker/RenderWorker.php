@@ -4,6 +4,12 @@ namespace Drupal\render_queue\Plugin\QueueWorker;
 
 use \Drupal\Core\Queue\QueueWorkerBase;
 
+/**
+ * @QueueWorker(
+ *   id = "render_queue",
+ *   title = @Translation("Render queue")
+ * )
+ */
 class RenderWorker extends QueueWorkerBase {
 
   /**
@@ -14,7 +20,7 @@ class RenderWorker extends QueueWorkerBase {
     $enabled_view_modes = \Drupal::service('entity_display.repository')
       ->getViewModeOptionsByBundle($data['type'], $data['bundle']);
     $renderer = \Drupal::service('renderer')->render($element);
-    $entity \Drupal::entityTypeManager()
+    $entity = \Drupal::entityTypeManager()
       ->getStorage($data['type'])->load($data['id']);
     foreach ($enabled_view_modes as $display_id => $label) {
       // TODO View per language.
