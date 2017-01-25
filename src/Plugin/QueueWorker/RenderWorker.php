@@ -3,6 +3,7 @@
 namespace Drupal\render_queue\Plugin\QueueWorker;
 
 use \Drupal\Core\Queue\QueueWorkerBase;
+use \Drupal\Core\Language\LanguageInterface;
 
 /**
  * @QueueWorker(
@@ -22,9 +23,13 @@ class RenderWorker extends QueueWorkerBase {
     $renderer = \Drupal::service('renderer')->render($element);
     $entity = \Drupal::entityTypeManager()
       ->getStorage($data['type'])->load($data['id']);
-    $languages = $entity->getTranslationLanguages();
+    $langcodes = [0 => NULL];
+    if ($entity instanceof LanguageInterface) {
+      $languages = $entity->getTranslationLanguages();
+      $langcodes = array_merge($langcode, array_keys($languages));
+    }
     foreach ($enabled_view_modes as $view_mode => $label) {
-      foreach ($languages as $langcode => $language) {
+      foreach ($langcodes as $langcode) {
         $view = $view_builder->view($entity, $view_mode, $langcode);
         $renderer->render($view);
       }
