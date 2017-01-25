@@ -22,10 +22,12 @@ class RenderWorker extends QueueWorkerBase {
     $renderer = \Drupal::service('renderer')->render($element);
     $entity = \Drupal::entityTypeManager()
       ->getStorage($data['type'])->load($data['id']);
-    foreach ($enabled_view_modes as $display_id => $label) {
-      // TODO View per language.
-      $view = $view_builder->view($entity, $display_id);
-      $renderer->render($view);
+    $languages = $entity->getTranslationLanguages();
+    foreach ($enabled_view_modes as $view_mode => $label) {
+      foreach ($languages as $langcode => $language) {
+        $view = $view_builder->view($entity, $view_mode, $langcode);
+        $renderer->render($view);
+      }
     }
   }
 }
