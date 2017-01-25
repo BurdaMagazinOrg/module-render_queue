@@ -18,11 +18,17 @@ class RenderWorker extends QueueWorkerBase {
    */
   public function processItem($data) {
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder($data['type']);
+    if (!$view_builder) {
+      return;
+    }
     $enabled_view_modes = \Drupal::service('entity_display.repository')
       ->getViewModeOptionsByBundle($data['type'], $data['bundle']);
-    $renderer = \Drupal::service('renderer')->render($element);
+    $renderer = \Drupal::service('renderer');
     $entity = \Drupal::entityTypeManager()
       ->getStorage($data['type'])->load($data['id']);
+    if (!$entity) {
+      return;
+    }
     $langcodes = [0 => NULL];
     if ($entity instanceof LanguageInterface) {
       $languages = $entity->getTranslationLanguages();
