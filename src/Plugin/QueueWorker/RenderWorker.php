@@ -5,6 +5,10 @@ namespace Drupal\render_queue\Plugin\QueueWorker;
 use \Drupal\Core\Queue\QueueWorkerBase;
 use \Drupal\Core\Language\LanguageInterface;
 use \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use \Drupal\Component\Utility\Html;
+use \Drupal\image\Controller\ImageStyleDownloadController;
+
+use \Symfony\Component\HttpFoundation\Request;
 
 /**
  * @QueueWorker(
@@ -12,7 +16,7 @@ use \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
  *   title = @Translation("Render queue")
  * )
  */
-class RenderWorker extends QueueWorkerBase {
+final class RenderWorker extends QueueWorkerBase {
 
   /**
    * {@inheritdoc}
@@ -40,8 +44,36 @@ class RenderWorker extends QueueWorkerBase {
     foreach ($enabled_view_modes as $view_mode => $label) {
       foreach ($langcodes as $langcode) {
         $view = $view_builder->view($entity, $view_mode, $langcode);
-        $renderer->renderRoot($view);
+        $html = (string) $renderer->renderRoot($view);
+        $this->createImageDerivatives($html);
       }
+    }
+  }
+
+  /**
+   * Fetches all image URLs to generate the image styles.
+   */
+  private function createImageDerivatives($html) {
+    $dom = Html::load($html);
+    $imgs = $dom->getElementsByTagName('img');
+    foreach ($imgs as $img) {
+      $url = !empty($img->getAttribute('src')) ? $img->getAttribute('src') : $img->getAttribute('srcset');
+      if (empty($url)) {
+        continue;
+      }
+      $url = str_replace('http://', '/', $url);
+      $url = str_replace('https://', '/', $url);
+      $request = Request::create($url);
+      $router = \Drupal::service('router.no_access_checks');
+      $match = [];
+      try {
+        $match = $router->matchRequest($request);
+      }
+      catch (\Exception $e) {
+        continue;
+      }
+      $controller = ImageStyleDownloadController::create(\Drupal::getContainer());
+      $controller->deliver($request, $match['scheme'], $match['image_style']);
     }
   }
 }
