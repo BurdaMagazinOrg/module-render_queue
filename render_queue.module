@@ -15,7 +15,7 @@ function render_queue_entity_insert(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_update(). 
+ * Implements hook_entity_update().
  */
 function render_queue_entity_update(EntityInterface $entity) {
   render_queue_add($entity);

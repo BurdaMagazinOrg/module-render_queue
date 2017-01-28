@@ -4,6 +4,7 @@
  * @file
  * Drush commands for render_queue.
  */
+
 use \Drupal\Core\Queue\QueueInterface;
 use \Drupal\Core\Queue\QueueWorkerInterface;
 use \Drupal\Core\Queue\RequeueException;
@@ -42,11 +43,11 @@ function drush_render_queue_run() {
     }
   }
   else {
-    while (true) {
+    while (TRUE) {
       _render_queue_process_next_item($queue, $queue_worker);
     }
   }
-  
+
   drush_print("Finished queue run.");
 }
 

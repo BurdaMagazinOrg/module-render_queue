@@ -11,6 +11,8 @@ use \Drupal\image\Controller\ImageStyleDownloadController;
 use \Symfony\Component\HttpFoundation\Request;
 
 /**
+ * The RenderWorker implementation class.
+ * 
  * @QueueWorker(
  *   id = "render_queue",
  *   title = @Translation("Render queue")
@@ -39,7 +41,7 @@ final class RenderWorker extends QueueWorkerBase {
     $langcodes = [0 => NULL];
     if ($entity instanceof LanguageInterface) {
       $languages = $entity->getTranslationLanguages();
-      $langcodes = array_merge($langcode, array_keys($languages));
+      $langcodes = array_merge($langcodes, array_keys($languages));
     }
     foreach ($enabled_view_modes as $view_mode => $label) {
       foreach ($langcodes as $langcode) {
@@ -56,6 +58,7 @@ final class RenderWorker extends QueueWorkerBase {
   private function createImageDerivatives($html) {
     $dom = Html::load($html);
     $imgs = $dom->getElementsByTagName('img');
+    $controller = ImageStyleDownloadController::create(\Drupal::getContainer());
     foreach ($imgs as $img) {
       $url = !empty($img->getAttribute('src')) ? $img->getAttribute('src') : $img->getAttribute('srcset');
       if (empty($url)) {
@@ -72,8 +75,8 @@ final class RenderWorker extends QueueWorkerBase {
       catch (\Exception $e) {
         continue;
       }
-      $controller = ImageStyleDownloadController::create(\Drupal::getContainer());
       $controller->deliver($request, $match['scheme'], $match['image_style']);
     }
   }
+
 }
