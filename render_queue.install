@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the render_queue module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function render_queue_uninstall() {
+  // Remove all pending items from the queue.
+  \Drupal::database()
+    ->delete('queue')
+    ->where('queue.name = :name', [':name' => 'render_queue'])
+    ->execute();
+}
+
