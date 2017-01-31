@@ -15,4 +15,3 @@ function render_queue_uninstall() {
     ->where('queue.name = :name', [':name' => 'render_queue'])
     ->execute();
 }
-

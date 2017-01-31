@@ -12,7 +12,7 @@ use \Symfony\Component\HttpFoundation\Request;
 
 /**
  * The RenderWorker implementation class.
- * 
+ *
  * @QueueWorker(
  *   id = "render_queue",
  *   title = @Translation("Render queue")
