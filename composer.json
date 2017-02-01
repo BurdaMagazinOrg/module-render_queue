@@ -1,0 +1,12 @@
+{
+  "name": "mxhaupt/render_queue",
+  "description": "A queue for Drupal which renders entities in their view modes.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Maximilian Haupt",
+      "email": "webit.haupt@googlemail.com"
+    }
+  ]
+}
