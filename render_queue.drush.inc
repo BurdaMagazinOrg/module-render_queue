@@ -53,6 +53,10 @@ function drush_render_queue_run() {
 
 /**
  * Helper function to process the next available item.
+ *
+ * When no item could be claimed,
+ * a sleep for one second will be invoked
+ * to reduce the possible overhead of database calls.
  */
 function _render_queue_process_next_item(QueueInterface $queue, QueueWorkerInterface $queue_worker, $lease_time = 30) {
   if ($item = $queue->claimItem($lease_time)) {
@@ -71,5 +75,8 @@ function _render_queue_process_next_item(QueueInterface $queue, QueueWorkerInter
     catch (\Exception $e) {
       watchdog_exception('cron', $e);
     }
+  }
+  else {
+    sleep(1);
   }
 }
