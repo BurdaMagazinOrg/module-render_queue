@@ -17,7 +17,7 @@ function render_queue_drush_command() {
   $commands = array();
 
   $commands['render-queue-run'] = [
-    'description' => dt('Attach a field value to a specific entity or all entities of given type and bundle.'),
+    'description' => dt('Starts a new worker process for the Render Queue.'),
     'core' => ['8+'],
     'options' => [
       'time-limit' => dt('The time limit. Default is set to value 0, which is unlimited.'),
@@ -28,7 +28,7 @@ function render_queue_drush_command() {
 }
 
 /**
- * Run the render queue.
+ * Processes the render queue.
  */
 function drush_render_queue_run() {
   $time_limit = drush_get_option('time-limit', 0);
