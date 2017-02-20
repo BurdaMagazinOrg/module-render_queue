@@ -75,7 +75,9 @@ final class RenderWorker extends QueueWorkerBase {
       catch (\Exception $e) {
         continue;
       }
-      $controller->deliver($request, $match['scheme'], $match['image_style']);
+      if (isset($match['scheme'], $match['image_style'])) {
+        $controller->deliver($request, $match['scheme'], $match['image_style']);
+      }
     }
   }
 
