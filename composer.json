@@ -1,5 +1,5 @@
 {
-  "name": "mxhaupt/render_queue",
+  "name": "burdamagazinorg/render_queue",
   "description": "A queue for Drupal which renders entities in their view modes.",
   "type": "drupal-module",
   "license": "GPL-2.0+",
