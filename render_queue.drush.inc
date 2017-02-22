@@ -61,16 +61,10 @@ function drush_render_queue_run() {
 function _render_queue_process_next_item(QueueInterface $queue, QueueWorkerInterface $queue_worker, $lease_time = 30) {
   if ($item = $queue->claimItem($lease_time)) {
     try {
-      $queue_worker->processItem($item->data);
+      // Remove the item from the queue,
+      // no matter whether it has been processed successfully.
       $queue->deleteItem($item);
-    }
-    catch (RequeueException $e) {
-      // The worker requested the task be immediately requeued.
-      $queue->releaseItem($item);
-    }
-    catch (SuspendQueueException $e) {
-      $queue->releaseItem($item);
-      watchdog_exception('cron', $e);
+      $queue_worker->processItem($item->data);
     }
     catch (\Exception $e) {
       watchdog_exception('cron', $e);
