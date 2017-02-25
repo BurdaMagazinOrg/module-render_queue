@@ -1,3 +1,12 @@
+WARNING
+-------
+
+This module is still under heavy development and is generally not recommended
+to be used in production. Currently, there are some critical problems , e.g.:
+
+- If you let the Worker process run via Drush, absolute URLs might be wrong generated due to the missing or falsely set address.
+- Some JS libraries might not work, e.g. Infinite Scrolling.
+
 CONTENTS OF THIS FILE
 ---------------------
    
