@@ -1,11 +1,15 @@
 WARNING
 -------
 
-This module is still under heavy development and is generally not recommended
-to be used in production. Currently, there are some critical problems , e.g.:
+This module is an experimental approach and still under heavy development,
+therefore it's generally not recommended to be used in production.
+Currently, there are some critical problems , e.g.:
 
-- If you let the Worker process run via Drush, absolute URLs might be wrong generated due to the missing or falsely set address.
-- Some JS libraries might not work, e.g. Infinite Scrolling.
+- If you let the Worker process run via Drush,
+  absolute URLs might be wrong generated due to the missing or falsely set address.
+- Generating wrong URL might also result in non-working JS, e.g. Infinite Scrolling.
+- Image Styles might be generated with root or non-web user ownership,
+  which could lead to non-writable folders for web-users.
 
 CONTENTS OF THIS FILE
 ---------------------
